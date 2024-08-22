@@ -13,6 +13,8 @@ interface Props {
   popoverBackground: string;
   themeColor: string;
   avatarUrl: string;
+  hideFeedback: boolean;
+  fontColor: string
 }
 
 export default function PopOver({
@@ -20,7 +22,9 @@ export default function PopOver({
   buttonHeight,
   popoverBackground,
   themeColor,
-  avatarUrl
+  avatarUrl,
+  hideFeedback,
+  fontColor
 }: Props) {
   // const [expanded, setExpanded] = useState(false);
   return (
@@ -46,7 +50,7 @@ export default function PopOver({
             : popoverBackground,
         boxShadow:
           '0 6px 6px 0 rgba(0,0,0,.02),0 8px 24px 0 rgba(0,0,0,.12)!important',
-        zIndex: 1000
+        zIndex: 1000,
       }}
     >
       <Fade in={!!anchorEl}>
@@ -55,11 +59,11 @@ export default function PopOver({
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            width: '100%'
+            width: '100%',
           }}
         >
           <Header themeColor={themeColor} avatarUrl={avatarUrl}/>
-          <Chat themeColor={themeColor}/>
+          <Chat fontColor={fontColor} hideFeedback={hideFeedback} themeColor={themeColor}/>
         </Box>
       </Fade>
     </Popper>

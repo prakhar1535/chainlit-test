@@ -33,6 +33,8 @@ interface Props {
     feedbackId: string
   ) => void;
   callAction?: (action: IAction) => void;
+  hideFeedback: boolean;
+  fontColor: string
 }
 
 const MessageContainer = memo(
@@ -45,7 +47,9 @@ const MessageContainer = memo(
     onFeedbackUpdated,
     onFeedbackDeleted,
     callAction,
-    themeColor
+    themeColor,
+    hideFeedback,
+    fontColor
   }: Props) => {
     const { config } = useConfig();
     const setSideView = useSetRecoilState(sideViewState);
@@ -59,7 +63,7 @@ const MessageContainer = memo(
       [_uploadFile]
     );
 
-    const enableFeedback = !!config?.dataPersistence;
+    // const enableFeedback = !!config?.dataPersistence;
 
     const onElementRefClick = useCallback(
       (element: IMessageElement) => {
@@ -100,7 +104,7 @@ const MessageContainer = memo(
         defaultCollapseContent: true,
         highlightedMessage,
         loading,
-        showFeedbackButtons: enableFeedback,
+        // showFeedbackButtons: enableFeedback,
         uiName: config?.ui?.name || '',
         onElementRefClick,
         onError,
@@ -109,7 +113,7 @@ const MessageContainer = memo(
       };
     }, [
       askUser,
-      enableFeedback,
+      // enableFeedback,
       highlightedMessage,
       loading,
       config?.ui?.name,
@@ -126,6 +130,8 @@ const MessageContainer = memo(
         messages={messages}
         context={memoizedContext}
         themeColor={themeColor}
+        hideFeedback={hideFeedback}
+        fontColor={fontColor}
       />
     );
   }

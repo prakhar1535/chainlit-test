@@ -30,7 +30,9 @@ interface Props {
   isRunning?: boolean;
   isScorable?: boolean;
   scorableRun?: IStep;
-  themeColor: string
+  themeColor: string;
+  hideFeedback: boolean;
+  fontColor: string
 }
 
 const Message = memo(
@@ -44,6 +46,8 @@ const Message = memo(
     isScorable,
     scorableRun,
     themeColor,
+    hideFeedback,
+    fontColor
   }: Props) => {
     const {
       highlightedMessage,
@@ -79,6 +83,8 @@ const Message = memo(
           isRunning={isRunning}
           scorableRun={scorableRun}
           themeColor={themeColor}
+          hideFeedback={hideFeedback}
+          fontColor={fontColor}
         />
       );
     }
@@ -128,6 +134,9 @@ const Message = memo(
                       }
                       allowHtml={allowHtml}
                       latex={latex}
+                      style={{
+                        color: fontColor !== "" ? fontColor : "unset"
+                      }}
                     />
                   </UserMessage>
                 </Box>
@@ -137,11 +146,6 @@ const Message = memo(
                   gap="1rem"
                   width="fit-content"
                   className="ai-message"
-                  sx={{
-                    backgroundColor: themeColor !== themeColor ? "#ededed" : `${themeColor}`  ,
-                    padding: "12px",
-                    borderRadius: "6px"
-                  }}
                 >
                   {!isStep || !indent ? (
                     <MessageAvatar author={message.name} hide={!showAvatar} />
@@ -159,6 +163,8 @@ const Message = memo(
                           indent={indent + 1}
                           isRunning={isRunning}
                           themeColor={themeColor}
+                          hideFeedback={hideFeedback}
+                          fontColor={fontColor}
                         />
                       ) : null}
                       <MessageContent
@@ -173,7 +179,7 @@ const Message = memo(
                       {actions?.length ? (
                         <MessageActions message={message} actions={actions} />
                       ) : null}
-                      <MessageButtons message={message} />
+                      <MessageButtons hideFeedback={hideFeedback} message={message} />
                     </Step>
                   ) : (
                     // Display an assistant message
@@ -184,6 +190,13 @@ const Message = memo(
                       position="relative"
                     >
                       <MessageContent
+                      style={
+                        {backgroundColor: themeColor !== themeColor ? "#ededed" : `${themeColor}`  ,
+                        padding: "12px",
+                        borderRadius: "6px",
+                        color: fontColor !== "" ? fontColor : "unset"}
+                      
+                      }
                         elements={elements}
                         message={message}
                         preserveSize={
@@ -199,7 +212,7 @@ const Message = memo(
                         <MessageActions message={message} actions={actions} />
                       ) : null}
                       {scorableRun && isScorable ? (
-                        <MessageButtons message={message} run={scorableRun} />
+                        <MessageButtons hideFeedback={hideFeedback} message={message} run={scorableRun} />
                       ) : null}
                     </Stack>
                   )}
@@ -218,6 +231,8 @@ const Message = memo(
             isRunning={isRunning}
             scorableRun={scorableRun}
             themeColor={themeColor}
+            hideFeedback={hideFeedback}
+            fontColor={fontColor}
           />
         ) : null}
         {/* Display the child steps if the message is not a step (usually a user message). */}
@@ -229,6 +244,8 @@ const Message = memo(
             indent={isUserMessage ? indent : indent + 1}
             isRunning={isRunning}
             themeColor={themeColor}
+            hideFeedback={hideFeedback}
+            fontColor={fontColor}
           />
         ) : null}
       </>

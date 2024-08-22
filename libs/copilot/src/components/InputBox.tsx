@@ -96,7 +96,7 @@ const InputBox = memo(
 
     return (
       <Box display="flex" position="relative" flexDirection="column" sx={{
-        backgroundColor: themeColor === "" ? "unset" : themeColor
+       
       }}>
         {!autoScroll ? (
           <ScrollDownButton onClick={() => setAutoScroll(true)} />

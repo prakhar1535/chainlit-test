@@ -18,7 +18,7 @@ import { useTranslation } from 'components/i18n/Translator';
 
 import MessageContainer from './container';
 
-const Messages = (): JSX.Element => {
+const Messages = ({themeColor, hideFeedback, fontColor}: {themeColor: string; hideFeedback: boolean; fontColor: string}): JSX.Element => {
   const apiClient = useContext(ChainlitContext);
   const { elements, askUser, loading, actions } = useChatData();
   const { messages } = useChatMessages();
@@ -97,6 +97,9 @@ const Messages = (): JSX.Element => {
       onFeedbackUpdated={onFeedbackUpdated}
       onFeedbackDeleted={onFeedbackDeleted}
       callAction={callAction}
+      themeColor={themeColor}
+      hideFeedback={hideFeedback}
+      fontColor={fontColor}
     />
   );
 };

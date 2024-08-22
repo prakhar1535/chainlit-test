@@ -21,10 +21,11 @@ export interface Props {
   preserveSize?: boolean;
   allowHtml?: boolean;
   latex?: boolean;
+  style?: React.CSSProperties
 }
 
 const MessageContent = memo(
-  ({ message, elements, preserveSize, allowHtml, latex }: Props) => {
+  ({ message, elements, preserveSize, allowHtml, latex, style }: Props) => {
     let lineCount = 0;
     let contentLength = 0;
 
@@ -120,7 +121,7 @@ ${input}`}
     );
 
     return (
-      <Stack className="message-content" width="100%">
+      <Stack className="message-content" width="100%" sx={style}>
         {!!inputMarkdown || output ? messageContent : null}
         <InlinedElements elements={outputInlinedElements} />
       </Stack>

@@ -31,7 +31,7 @@ import Messages from './Messages';
 import InputBox from './inputBox';
 import WelcomeScreen from './welcomeScreen';
 
-const Chat = () => {
+const Chat = ({themeColor, hideFeedback, fontColor}: {themeColor?: string; hideFeedback?: boolean; fontColor?: string}) => {
   const { user } = useAuth();
   const { config } = useConfig();
   const setAttachments = useSetRecoilState(attachmentsState);
@@ -205,7 +205,7 @@ const Chat = () => {
           >
             <WelcomeScreen />
             <Box py={2} />
-            <Messages />
+            <Messages fontColor={fontColor || ""} hideFeedback={hideFeedback || false}themeColor={themeColor || ""}/>
           </ScrollContainer>
           <InputBox
             // fileSpec={fileSpec}

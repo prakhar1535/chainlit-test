@@ -28,9 +28,12 @@ type Props = {
   thread?: IThread;
   error?: Error;
   isLoading?: boolean;
+  themeColor: string;
+  hideFeedback?: boolean;
+  fontColor?: string
 };
 
-const Thread = ({ thread, error, isLoading }: Props) => {
+const Thread = ({ thread, error, isLoading, themeColor,fontColor , hideFeedback }: Props) => {
   const accessToken = useRecoilValue(accessTokenState);
   const [steps, setSteps] = useState<IStep[]>([]);
   const apiClient = useContext(ChainlitContext);
@@ -196,6 +199,9 @@ const Thread = ({ thread, error, isLoading }: Props) => {
           onFeedbackUpdated={onFeedbackUpdated}
           onFeedbackDeleted={onFeedbackDeleted}
           messages={messages}
+          themeColor={themeColor}
+          hideFeedback={hideFeedback || false}
+          fontColor={fontColor || ""}
         />
       </ScrollContainer>
     </Stack>

@@ -49,8 +49,14 @@ const SubmitButton = ({ disabled, onSubmit }: SubmitButtonProps) => {
             <Translator path="components.organisms.chat.inputBox.SubmitButton.sendMessage" />
           }
         >
-          <IconButton disabled={disabled} color="inherit" onClick={onSubmit}>
-            <Telegram />
+          <IconButton sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }} disabled={disabled} color="inherit" onClick={onSubmit}>
+            <Telegram  sx={{
+              color: "black"
+            }}/>
           </IconButton>
         </Tooltip>
       )}

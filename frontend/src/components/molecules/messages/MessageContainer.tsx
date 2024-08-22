@@ -12,10 +12,12 @@ interface Props {
   elements: IMessageElement[];
   messages: IStep[];
   themeColor: string
+  hideFeedback: boolean
+  fontColor: string
 }
 
 const MessageContainer = memo(
-  ({ actions, context, elements, messages, themeColor }: Props) => {
+  ({ actions, context, elements, messages, themeColor, hideFeedback, fontColor }: Props) => {
     return (
       <MessageContext.Provider value={context || defaultMessageContext}>
         <Messages
@@ -24,6 +26,8 @@ const MessageContainer = memo(
           elements={elements}
           actions={actions}
           themeColor={themeColor}
+          hideFeedback={hideFeedback}
+          fontColor={fontColor}
         />
       </MessageContext.Provider>
     );

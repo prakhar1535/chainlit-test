@@ -26,9 +26,11 @@ import { InputBox } from 'components/InputBox';
 
 import Messages from './messages';
 interface Props {
-  themeColor: string
+  themeColor: string;
+  hideFeedback: boolean
+  fontColor: string
 }
-const Chat:React.FC<Props> = ({themeColor}) => {
+const Chat:React.FC<Props> = ({themeColor, hideFeedback, fontColor}) => {
   const { config } = useConfig();
   const setAttachments = useSetRecoilState(attachmentsState);
   const setThreads = useSetRecoilState(threadHistoryState);
@@ -164,6 +166,7 @@ const Chat:React.FC<Props> = ({themeColor}) => {
       width="100%"
       flexGrow={1}
       overflow="auto"
+   
     >
       {upload ? (
         <>
@@ -204,7 +207,7 @@ const Chat:React.FC<Props> = ({themeColor}) => {
           >
             <WelcomeScreen hideLogo />
             <Box my={1} />
-            <Messages themeColor={themeColor}/>
+            <Messages  fontColor={fontColor} hideFeedback={hideFeedback} themeColor={themeColor}/>
           </ScrollContainer>
           <InputBox
             fileSpec={fileSpec}

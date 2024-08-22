@@ -9,7 +9,7 @@ const defaultMessageContext = {
   loading: false,
   onElementRefClick: undefined,
   onFeedbackUpdated: undefined,
-  showFeedbackButtons: true,
+  showFeedbackButtons: false,
   onError: () => undefined,
   uiName: ''
 };

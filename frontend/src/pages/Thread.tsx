@@ -17,7 +17,7 @@ import { Thread } from 'components/organisms/sidebar/threadHistory/Thread';
 import Page from './Page';
 import ResumeButton from './ResumeButton';
 
-export default function ThreadPage() {
+export default function ThreadPage({themeColor}: {themeColor?: string}) {
   const { id } = useParams();
 
   const { data, error, isLoading } = useApi<IThread>(
@@ -44,7 +44,7 @@ export default function ThreadPage() {
   return (
     <Page>
       <>
-        {isCurrentThread && <Chat />}
+        {isCurrentThread && <Chat themeColor={themeColor}/>}
         {!isCurrentThread && (
           <Box
             sx={{
@@ -55,7 +55,7 @@ export default function ThreadPage() {
             }}
           >
             <Box sx={{ width: '100%', flexGrow: 1, overflow: 'auto' }}>
-              <Thread thread={data} error={error} isLoading={isLoading} />
+              <Thread themeColor={themeColor || ""} thread={data} error={error} isLoading={isLoading} />
             </Box>
             <ResumeButton threadId={id} />
           </Box>

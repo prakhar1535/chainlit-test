@@ -129,8 +129,7 @@ const Input = memo(({ onFileUpload, onSubmit, onReply, themeColor }: Props) => {
     <>
       <Stack
         sx={{
-          backgroundColor: themeColor === "" ? "background.default" : themeColor,
-          borderTop: (theme) => `1px solid ${themeColor === "" ? theme.palette.divider : themeColor}`,
+          borderTop: (theme) => `1px solid ${ theme.palette.divider }`,
           margin: 1,
           paddingTop: 1,
           paddingX: 1,
@@ -171,10 +170,13 @@ const Input = memo(({ onFileUpload, onSubmit, onReply, themeColor }: Props) => {
             disableUnderline: true,
             sx: {
               pl: 0,
-              width: '100%'
+              padding: "6px",
+              borderRadius: "8px",
+              width: '100%',
+              backgroundColor: "white"
             },
             endAdornment: (
-              <Box sx={{ mr: -2 }}>
+              <Box display={"flex"} alignItems={"center"} justifyContent={"center"} sx={{ mr: 0, backgroundColor: themeColor !== "" ? themeColor : "#ededed", borderRadius: "4px" }}>
                 <SubmitButton
                   onSubmit={submit}
                   disabled={disabled || (!loading && !value)}

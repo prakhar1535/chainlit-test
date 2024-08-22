@@ -16,9 +16,10 @@ import { FeedbackButtons } from './FeedbackButtons';
 interface Props {
   message: IStep;
   run?: IStep;
+  hideFeedback: boolean
 }
 
-const MessageButtons = ({ message, run }: Props) => {
+const MessageButtons = ({ message, run, hideFeedback }: Props) => {
   const isDark = useIsDarkMode();
   const { config } = useConfig();
   const { firstInteraction } = useChatMessages();
@@ -43,9 +44,12 @@ const MessageButtons = ({ message, run }: Props) => {
       alignItems="center"
       direction="row"
       color={isDark ? grey[400] : grey[600]}
-    >
-      {showCopyButton ? <ClipboardCopy value={message.output} /> : null}
-      {run ? <FeedbackButtons message={run} /> : null}
+    >{hideFeedback === true && showCopyButton && run ? (
+      <>
+      <ClipboardCopy value={message.output} />
+      <FeedbackButtons message={run} />
+      </>
+    ): null}
       {showDebugButton ? (
         <DebugButton debugUrl={config.debugUrl!} step={message} />
       ) : null}

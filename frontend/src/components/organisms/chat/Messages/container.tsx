@@ -35,6 +35,9 @@ interface Props {
     feedback: string
   ) => void;
   callAction?: (action: IAction) => void;
+  themeColor:string
+  hideFeedback: boolean
+  fontColor: string
 }
 
 const MessageContainer = memo(
@@ -46,7 +49,10 @@ const MessageContainer = memo(
     messages,
     onFeedbackUpdated,
     onFeedbackDeleted,
-    callAction
+    callAction,
+    themeColor,
+    hideFeedback,
+    fontColor
   }: Props) => {
     const { config } = useConfig();
     const setSideView = useSetRecoilState(sideViewState);
@@ -60,7 +66,7 @@ const MessageContainer = memo(
       [_uploadFile]
     );
 
-    const enableFeedback = !!config?.dataPersistence;
+    const enableFeedback = false;
 
     const navigate = useNavigate();
 
@@ -137,6 +143,9 @@ const MessageContainer = memo(
         elements={elements}
         messages={messages}
         context={memoizedContext}
+        themeColor={themeColor}
+        hideFeedback={hideFeedback}
+        fontColor={fontColor}
       />
     );
   }
