@@ -11,10 +11,11 @@ interface Props {
   context: IMessageContext;
   elements: IMessageElement[];
   messages: IStep[];
+  themeColor: string
 }
 
 const MessageContainer = memo(
-  ({ actions, context, elements, messages }: Props) => {
+  ({ actions, context, elements, messages, themeColor }: Props) => {
     return (
       <MessageContext.Provider value={context || defaultMessageContext}>
         <Messages
@@ -22,6 +23,7 @@ const MessageContainer = memo(
           messages={messages}
           elements={elements}
           actions={actions}
+          themeColor={themeColor}
         />
       </MessageContext.Provider>
     );

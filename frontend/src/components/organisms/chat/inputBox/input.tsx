@@ -16,14 +16,14 @@ import { IAttachment, attachmentsState } from 'state/chat';
 import { chatSettingsOpenState } from 'state/project';
 import { inputHistoryState } from 'state/userInputHistory';
 
-import MicButton from './MicButton';
+// import MicButton from './MicButton';
 import { SubmitButton } from './SubmitButton';
-import UploadButton from './UploadButton';
+// import UploadButton from './UploadButton';
 
 interface Props {
-  fileSpec: FileSpec;
-  onFileUpload: (payload: File[]) => void;
-  onFileUploadError: (error: string) => void;
+  fileSpec?: FileSpec;
+  onFileUpload?: (payload: File[]) => void;
+  onFileUploadError?: (error: string) => void;
   onSubmit: (message: string, attachments?: IAttachment[]) => void;
   onReply: (message: string) => void;
 }
@@ -71,14 +71,14 @@ const Input = memo(
           }
 
           // If no text data, check for files (e.g., images)
-          items.forEach((item) => {
-            if (item.kind === 'file') {
-              const file = item.getAsFile();
-              if (file) {
-                onFileUpload([file]);
-              }
-            }
-          });
+          // items.forEach((item) => {
+          //   if (item.kind === 'file') {
+          //     const file = item.getAsFile();
+          //     if (file) {
+          //       onFileUpload([file]);
+          //     }
+          //   }
+          // });
         }
       };
 
@@ -148,12 +148,12 @@ const Input = memo(
     const startAdornment = (
       <>
         <HistoryButton disabled={disabled} onClick={onHistoryClick} />
-        <UploadButton
+        {/* <UploadButton
           disabled={disabled}
           fileSpec={fileSpec}
           onFileUploadError={onFileUploadError}
           onFileUpload={onFileUpload}
-        />
+        /> */}
         {chatSettingsInputs.length > 0 && (
           <IconButton
             id="chat-settings-open-modal"
@@ -164,7 +164,7 @@ const Input = memo(
             <TuneIcon />
           </IconButton>
         )}
-        <MicButton disabled={disabled} />
+        {/* <MicButton disabled={disabled} /> */}
       </>
     );
 

@@ -18,6 +18,8 @@ export default function Widget({ config }: Props) {
   const customStyle = config.button?.style || {};
   const buttonHeight = customStyle.height || customStyle.size || '60px';
   const popoverBackground = config.popoverBackground || undefined;
+  const themeColor = config.themeColor || undefined;
+  const avatarUrl = config.avatarUrl || undefined;
   const style = {
     width: customStyle.width || customStyle.size || '60px',
     height: buttonHeight,
@@ -41,6 +43,8 @@ export default function Widget({ config }: Props) {
         anchorEl={anchorEl}
         buttonHeight={buttonHeight}
         popoverBackground={popoverBackground ? popoverBackground : ''}
+        themeColor={themeColor ? themeColor : ""}
+        avatarUrl={avatarUrl ? avatarUrl : ""}
       />
       <Fab
         disableRipple

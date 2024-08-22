@@ -25,8 +25,10 @@ import { ElementSideView } from 'components/ElementSideView';
 import { InputBox } from 'components/InputBox';
 
 import Messages from './messages';
-
-const Chat = () => {
+interface Props {
+  themeColor: string
+}
+const Chat:React.FC<Props> = ({themeColor}) => {
   const { config } = useConfig();
   const setAttachments = useSetRecoilState(attachmentsState);
   const setThreads = useSetRecoilState(threadHistoryState);
@@ -202,7 +204,7 @@ const Chat = () => {
           >
             <WelcomeScreen hideLogo />
             <Box my={1} />
-            <Messages />
+            <Messages themeColor={themeColor}/>
           </ScrollContainer>
           <InputBox
             fileSpec={fileSpec}
@@ -210,6 +212,7 @@ const Chat = () => {
             onFileUploadError={onFileUploadError}
             autoScroll={autoScroll}
             setAutoScroll={setAutoScroll}
+            themeColor={themeColor}
           />
         </ErrorBoundary>
       </Box>

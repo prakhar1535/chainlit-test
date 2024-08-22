@@ -1,12 +1,15 @@
 export interface IWidgetConfig {
+  chatBotID?: string;
   chainlitServer: string;
   botName?: string;
   showCot?: boolean;
   accessToken?: string;
-  botId?: string;
   popoverBackground?: string | undefined;
   theme?: 'light' | 'dark';
   fontFamily?: string;
+  themeColor?: string | undefined;
+  hideFeedback?: boolean;
+  avatarUrl?: string | undefined;
   button?: {
     containerId?: string;
     imageUrl?: string;

@@ -17,20 +17,22 @@ import {
 import Input from './Input';
 
 interface Props {
-  fileSpec: FileSpec;
-  onFileUpload: (payload: File[]) => void;
-  onFileUploadError: (error: string) => void;
+  fileSpec?: FileSpec;
+  onFileUpload?: (payload: File[]) => void;
+  onFileUploadError?: (error: string) => void;
   setAutoScroll: (autoScroll: boolean) => void;
   autoScroll?: boolean;
+  themeColor: string;
 }
 
 const InputBox = memo(
   ({
-    fileSpec,
-    onFileUpload,
+    // fileSpec,
+    // onFileUpload,
     // onFileUploadError,
     setAutoScroll,
-    autoScroll
+    autoScroll,
+    themeColor
   }: Props) => {
     const setInputHistory = useSetRecoilState(inputHistoryState);
 
@@ -93,16 +95,19 @@ const InputBox = memo(
     );
 
     return (
-      <Box display="flex" position="relative" flexDirection="column">
+      <Box display="flex" position="relative" flexDirection="column" sx={{
+        backgroundColor: themeColor === "" ? "unset" : themeColor
+      }}>
         {!autoScroll ? (
           <ScrollDownButton onClick={() => setAutoScroll(true)} />
         ) : null}
         <Input
-          fileSpec={fileSpec}
-          onFileUpload={onFileUpload}
+          // fileSpec={fileSpec}
+          // onFileUpload={onFileUpload}
           // onFileUploadError={onFileUploadError}
           onSubmit={onSubmit}
           onReply={onReply}
+          themeColor={themeColor}
         />
       </Box>
     );

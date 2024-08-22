@@ -18,9 +18,9 @@ import Input from './input';
 import WaterMark from './waterMark';
 
 interface Props {
-  fileSpec: FileSpec;
-  onFileUpload: (payload: File[]) => void;
-  onFileUploadError: (error: string) => void;
+  fileSpec?: FileSpec;
+  onFileUpload?: (payload: File[]) => void;
+  onFileUploadError?: (error: string) => void;
   setAutoScroll: (autoScroll: boolean) => void;
   autoScroll?: boolean;
 }
@@ -116,9 +116,9 @@ const InputBox = memo(
         ) : null}
         <Box>
           <Input
-            fileSpec={fileSpec}
-            onFileUpload={onFileUpload}
-            onFileUploadError={onFileUploadError}
+            // fileSpec={fileSpec}
+            // onFileUpload={onFileUpload}
+            // onFileUploadError={onFileUploadError}
             onSubmit={onSubmit}
             onReply={onReply}
           />
@@ -134,7 +134,7 @@ const InputBox = memo(
         </Stack> */}
           {/* )} */}
         </Box>
-        <WaterMark />s
+        <WaterMark />
       </Box>
     );
   }

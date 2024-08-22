@@ -5,7 +5,7 @@ import { useChatInteract, useChatSession } from '@chainlit/react-client';
 
 import ChatBody from './body';
 
-export default function ChatWrapper() {
+export default function ChatWrapper({themeColor} : {themeColor: string}) {
   const { accessToken } = useContext(WidgetContext);
   const { connect, session } = useChatSession();
   const { sendMessage } = useChatInteract();
@@ -22,5 +22,5 @@ export default function ChatWrapper() {
     window.sendChainlitMessage = sendMessage;
   }, [sendMessage]);
 
-  return <ChatBody />;
+  return <ChatBody themeColor={themeColor}/>;
 }

@@ -7,7 +7,7 @@ import { Box, IconButton, Stack, TextField } from '@mui/material';
 
 import { useTranslation } from '@chainlit/app/src/components/i18n/Translator';
 import { Attachments } from '@chainlit/app/src/components/molecules/attachments';
-import MicButton from '@chainlit/app/src/components/organisms/chat/inputBox/MicButton';
+// import MicButton from '@chainlit/app/src/components/organisms/chat/inputBox/MicButton';
 import { SubmitButton } from '@chainlit/app/src/components/organisms/chat/inputBox/SubmitButton';
 import WaterMark from '@chainlit/app/src/components/organisms/chat/inputBox/waterMark';
 import { IAttachment, attachmentsState } from '@chainlit/app/src/state/chat';
@@ -16,10 +16,11 @@ import { inputHistoryState } from '@chainlit/app/src/state/userInputHistory';
 import { FileSpec, useChatData } from '@chainlit/react-client';
 
 interface Props {
-  fileSpec: FileSpec;
-  onFileUpload: (payload: File[]) => void;
+  fileSpec?: FileSpec;
+  onFileUpload?: (payload: File[]) => void;
   onSubmit: (message: string, attachments?: IAttachment[]) => void;
   onReply: (message: string) => void;
+  themeColor: string;
 }
 
 function getLineCount(el: HTMLDivElement) {
@@ -31,7 +32,7 @@ function getLineCount(el: HTMLDivElement) {
   return lines.length;
 }
 
-const Input = memo(({ onFileUpload, onSubmit, onReply }: Props) => {
+const Input = memo(({ onFileUpload, onSubmit, onReply, themeColor }: Props) => {
   const [attachments, setAttachments] = useRecoilState(attachmentsState);
   const setInputHistory = useSetRecoilState(inputHistoryState);
   const setChatSettingsOpen = useSetRecoilState(chatSettingsOpenState);
@@ -59,7 +60,7 @@ const Input = memo(({ onFileUpload, onSubmit, onReply }: Props) => {
           if (item.kind === 'file') {
             const file = item.getAsFile();
             if (file) {
-              onFileUpload([file]);
+              // onFileUpload([file]);
             }
           }
         });
@@ -128,8 +129,8 @@ const Input = memo(({ onFileUpload, onSubmit, onReply }: Props) => {
     <>
       <Stack
         sx={{
-          backgroundColor: 'background.default',
-          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+          backgroundColor: themeColor === "" ? "background.default" : themeColor,
+          borderTop: (theme) => `1px solid ${themeColor === "" ? theme.palette.divider : themeColor}`,
           margin: 1,
           paddingTop: 1,
           paddingX: 1,
@@ -206,7 +207,7 @@ const Input = memo(({ onFileUpload, onSubmit, onReply }: Props) => {
                 <TuneIcon fontSize="small" />
               </IconButton>
             )}
-            <MicButton disabled={disabled} />
+            {/* <MicButton disabled={disabled} /> */}
           </Stack>
           <Box>
             <WaterMark />
@@ -218,3 +219,9 @@ const Input = memo(({ onFileUpload, onSubmit, onReply }: Props) => {
 });
 
 export default Input;
+
+
+
+
+// themeColor: string
+// themeColor={themeColor}

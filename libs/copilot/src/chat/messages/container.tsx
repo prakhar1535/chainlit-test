@@ -16,6 +16,7 @@ import {
 import { sideViewState } from '@chainlit/react-client';
 
 interface Props {
+  themeColor: string,
   loading: boolean;
   actions: IAction[];
   elements: IMessageElement[];
@@ -43,7 +44,8 @@ const MessageContainer = memo(
     messages,
     onFeedbackUpdated,
     onFeedbackDeleted,
-    callAction
+    callAction,
+    themeColor
   }: Props) => {
     const { config } = useConfig();
     const setSideView = useSetRecoilState(sideViewState);
@@ -123,6 +125,7 @@ const MessageContainer = memo(
         elements={elements}
         messages={messages}
         context={memoizedContext}
+        themeColor={themeColor}
       />
     );
   }

@@ -11,12 +11,16 @@ interface Props {
   anchorEl?: HTMLElement | null;
   buttonHeight: string;
   popoverBackground: string;
+  themeColor: string;
+  avatarUrl: string;
 }
 
 export default function PopOver({
   anchorEl,
   buttonHeight,
-  popoverBackground
+  popoverBackground,
+  themeColor,
+  avatarUrl
 }: Props) {
   // const [expanded, setExpanded] = useState(false);
   return (
@@ -54,8 +58,8 @@ export default function PopOver({
             width: '100%'
           }}
         >
-          <Header />
-          <Chat />
+          <Header themeColor={themeColor} avatarUrl={avatarUrl}/>
+          <Chat themeColor={themeColor}/>
         </Box>
       </Fade>
     </Popper>

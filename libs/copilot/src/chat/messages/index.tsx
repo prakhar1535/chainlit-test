@@ -17,7 +17,7 @@ import {
 
 import MessageContainer from './container';
 
-const Messages = (): JSX.Element => {
+const Messages = ({themeColor} : {themeColor: string}): JSX.Element => {
   const apiClient = useContext(ChainlitContext);
   const { accessToken } = useContext(WidgetContext);
 
@@ -98,6 +98,7 @@ const Messages = (): JSX.Element => {
       onFeedbackUpdated={onFeedbackUpdated}
       onFeedbackDeleted={onFeedbackDeleted}
       callAction={callActionWithToast}
+      themeColor={themeColor}
     />
   );
 };

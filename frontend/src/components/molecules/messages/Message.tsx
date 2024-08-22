@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 
 import { useConfig } from '@chainlit/react-client';
 
-import { AskUploadButton } from './components/AskUploadButton';
+// import { AskUploadButton } from './components/AskUploadButton';
 import { MessageAvatar } from './components/Avatar';
 import { MessageActions } from './components/MessageActions';
 import { MessageButtons } from './components/MessageButtons';
@@ -30,6 +30,7 @@ interface Props {
   isRunning?: boolean;
   isScorable?: boolean;
   scorableRun?: IStep;
+  themeColor: string
 }
 
 const Message = memo(
@@ -41,7 +42,8 @@ const Message = memo(
     isRunning,
     indent,
     isScorable,
-    scorableRun
+    scorableRun,
+    themeColor,
   }: Props) => {
     const {
       highlightedMessage,
@@ -76,6 +78,7 @@ const Message = memo(
           indent={indent}
           isRunning={isRunning}
           scorableRun={scorableRun}
+          themeColor={themeColor}
         />
       );
     }
@@ -132,8 +135,13 @@ const Message = memo(
                 <Stack
                   direction="row"
                   gap="1rem"
-                  width="100%"
+                  width="fit-content"
                   className="ai-message"
+                  sx={{
+                    backgroundColor: themeColor !== themeColor ? "#ededed" : `${themeColor}`  ,
+                    padding: "12px",
+                    borderRadius: "6px"
+                  }}
                 >
                   {!isStep || !indent ? (
                     <MessageAvatar author={message.name} hide={!showAvatar} />
@@ -150,6 +158,7 @@ const Message = memo(
                           actions={actions}
                           indent={indent + 1}
                           isRunning={isRunning}
+                          themeColor={themeColor}
                         />
                       ) : null}
                       <MessageContent
@@ -183,9 +192,9 @@ const Message = memo(
                         allowHtml={allowHtml}
                         latex={latex}
                       />
-                      {!isRunning && isAsk && (
+                      {/* {!isRunning && isAsk && (
                         <AskUploadButton onError={onError} />
-                      )}
+                      )} */}
                       {actions?.length ? (
                         <MessageActions message={message} actions={actions} />
                       ) : null}
@@ -208,6 +217,7 @@ const Message = memo(
             indent={0}
             isRunning={isRunning}
             scorableRun={scorableRun}
+            themeColor={themeColor}
           />
         ) : null}
         {/* Display the child steps if the message is not a step (usually a user message). */}
@@ -218,6 +228,7 @@ const Message = memo(
             actions={actions}
             indent={isUserMessage ? indent : indent + 1}
             isRunning={isRunning}
+            themeColor={themeColor}
           />
         ) : null}
       </>
