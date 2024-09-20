@@ -12,9 +12,10 @@ import { Box, Tooltip } from '@mui/material';
 interface Props {
   author?: string;
   hide?: boolean;
+  avatarUrl: string;
 }
 
-const MessageAvatar = ({ author }: Props) => {
+const MessageAvatar = ({ author, avatarUrl }: Props) => {
   // const apiClient = useContext(ChainlitContext);
   // const { chatProfile } = useChatSession();
   // const { config } = useConfig();
@@ -32,18 +33,23 @@ const MessageAvatar = ({ author }: Props) => {
   // }, [apiClient, selectedChatProfile, config, author]);
 
   return (
-    <span className={`message-avatar`} style={{
-      paddingTop: "12px"
-    }}> 
+    <span
+      className={`message-avatar`}
+      style={{
+        paddingTop: '12px'
+      }}
+    >
       <Tooltip title={author}>
         <Box
           component={'img'}
           src={
-            'https://res.cloudinary.com/dvv44upa0/image/upload/v1724088690/xvvolyzavi6vrxg96a0a.png'
+            avatarUrl && avatarUrl !== ''
+              ? avatarUrl
+              : 'https://res.cloudinary.com/dvv44upa0/image/upload/v1724088690/xvvolyzavi6vrxg96a0a.png'
           }
           sx={{
             borderRadius: '10000px',
-            
+
             width: '1.5rem',
             height: '1.5rem'
           }}

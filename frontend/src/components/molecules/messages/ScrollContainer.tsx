@@ -46,7 +46,9 @@ export default function ScrollContainer({
       flexDirection="column"
       flexGrow={1}
       sx={{
-        overflowY: 'auto'
+        overflowY: 'auto',
+
+        overflowX: 'hidden'
       }}
       onScroll={handleScroll}
     >

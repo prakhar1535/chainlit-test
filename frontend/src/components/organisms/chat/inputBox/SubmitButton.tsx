@@ -40,7 +40,12 @@ const SubmitButton = ({ disabled, onSubmit }: SubmitButtonProps) => {
           }
         >
           <IconButton id="stop-button" onClick={handleClick}>
-            <StopCircle />
+            <StopCircle
+              sx={{
+                color: 'white',
+                marginLeft: '6px'
+              }}
+            />
           </IconButton>
         </Tooltip>
       ) : (
@@ -49,15 +54,22 @@ const SubmitButton = ({ disabled, onSubmit }: SubmitButtonProps) => {
             <Translator path="components.organisms.chat.inputBox.SubmitButton.sendMessage" />
           }
         >
-          <IconButton sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }} disabled={disabled} color="inherit" onClick={onSubmit}>
-            <Telegram  sx={{
-              color: "white",
-              marginLeft: "6px"
-            }}/>
+          <IconButton
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            disabled={disabled}
+            color="inherit"
+            onClick={onSubmit}
+          >
+            <Telegram
+              sx={{
+                color: 'white',
+                marginLeft: '6px'
+              }}
+            />
           </IconButton>
         </Tooltip>
       )}

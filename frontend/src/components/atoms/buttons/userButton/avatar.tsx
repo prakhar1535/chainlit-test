@@ -8,7 +8,7 @@ export default function UserAvatar(props: IconButtonProps) {
           width: '1.6rem',
           height: '1.6rem',
           bgcolor: 'transparent',
-          borderRadius: "50%"
+          borderRadius: '50%'
         }}
         src={
           'https://res.cloudinary.com/dvv44upa0/image/upload/v1724088690/xvvolyzavi6vrxg96a0a.png'

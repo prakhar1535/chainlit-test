@@ -21,6 +21,7 @@ interface Props {
   onSubmit: (message: string, attachments?: IAttachment[]) => void;
   onReply: (message: string) => void;
   themeColor: string;
+  branding: boolean;
 }
 
 function getLineCount(el: HTMLDivElement) {
@@ -32,198 +33,204 @@ function getLineCount(el: HTMLDivElement) {
   return lines.length;
 }
 
-const Input = memo(({ onFileUpload, onSubmit, onReply, themeColor }: Props) => {
-  const [attachments, setAttachments] = useRecoilState(attachmentsState);
-  const setInputHistory = useSetRecoilState(inputHistoryState);
-  const setChatSettingsOpen = useSetRecoilState(chatSettingsOpenState);
+const Input = memo(
+  ({ onFileUpload, onSubmit, onReply, themeColor, branding }: Props) => {
+    const [attachments, setAttachments] = useRecoilState(attachmentsState);
+    const setInputHistory = useSetRecoilState(inputHistoryState);
+    const setChatSettingsOpen = useSetRecoilState(chatSettingsOpenState);
 
-  const ref = useRef<HTMLDivElement>(null);
-  const {
-    loading,
-    askUser,
-    chatSettingsInputs,
-    disabled: _disabled
-  } = useChatData();
+    const ref = useRef<HTMLDivElement>(null);
+    const {
+      loading,
+      askUser,
+      chatSettingsInputs,
+      disabled: _disabled
+    } = useChatData();
 
-  const [value, setValue] = useState('');
-  const [isComposing, setIsComposing] = useState(false);
+    const [value, setValue] = useState('');
+    const [isComposing, setIsComposing] = useState(false);
 
-  const disabled = _disabled || !!attachments.find((a) => !a.uploaded);
+    const disabled = _disabled || !!attachments.find((a) => !a.uploaded);
 
-  const { t } = useTranslation();
+    const { t } = useTranslation();
 
-  useEffect(() => {
-    const pasteEvent = (event: ClipboardEvent) => {
-      if (event.clipboardData && event.clipboardData.items) {
-        const items = Array.from(event.clipboardData.items);
-        items.forEach((item) => {
-          if (item.kind === 'file') {
-            const file = item.getAsFile();
-            if (file) {
-              // onFileUpload([file]);
+    useEffect(() => {
+      const pasteEvent = (event: ClipboardEvent) => {
+        if (event.clipboardData && event.clipboardData.items) {
+          const items = Array.from(event.clipboardData.items);
+          items.forEach((item) => {
+            if (item.kind === 'file') {
+              const file = item.getAsFile();
+              if (file) {
+                // onFileUpload([file]);
+              }
             }
-          }
-        });
-      }
-    };
-
-    if (!ref.current) {
-      return;
-    }
-
-    const input = ref.current;
-    input.addEventListener('paste', pasteEvent);
-
-    return () => {
-      input.removeEventListener('paste', pasteEvent);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (ref.current && !loading && !disabled) {
-      ref.current.focus();
-    }
-  }, [loading, disabled]);
-
-  const submit = useCallback(() => {
-    if (value === '' || disabled) {
-      return;
-    }
-
-    if (askUser) {
-      onReply(value);
-    } else {
-      onSubmit(value, attachments);
-    }
-
-    setAttachments([]);
-    setValue('');
-  }, [
-    value,
-    disabled,
-    setValue,
-    askUser,
-    attachments,
-    setAttachments,
-    onSubmit
-  ]);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        if (!isComposing) {
-          e.preventDefault();
-          submit();
+          });
         }
-      } else if (e.key === 'ArrowUp') {
-        const lineCount = getLineCount(e.currentTarget as HTMLDivElement);
-        if (lineCount <= 1) {
-          setInputHistory((old) => ({ ...old, open: true }));
-        }
-      }
-    },
-    [submit, setInputHistory, isComposing]
-  );
+      };
 
-  return (
-    <>
-      <Stack
-        sx={{
-          borderTop: (theme) => `1px solid ${ theme.palette.divider }`,
-          margin: 1,
-          paddingTop: 1,
-          paddingX: 1,
-          boxShadow: 'box-shadow: 0px 2px 4px 0px #0000000D',
-          gap: 1,
-          textarea: {
-            height: '34px',
-            maxHeight: '30vh',
-            overflowY: 'auto !important',
-            resize: 'none',
-            color: 'text.primary',
-            lineHeight: '24px'
+      if (!ref.current) {
+        return;
+      }
+
+      const input = ref.current;
+      input.addEventListener('paste', pasteEvent);
+
+      return () => {
+        input.removeEventListener('paste', pasteEvent);
+      };
+    }, []);
+
+    useEffect(() => {
+      if (ref.current && !loading && !disabled) {
+        ref.current.focus();
+      }
+    }, [loading, disabled]);
+
+    const submit = useCallback(() => {
+      if (value === '' || disabled) {
+        return;
+      }
+
+      if (askUser) {
+        onReply(value);
+      } else {
+        onSubmit(value, attachments);
+      }
+
+      setAttachments([]);
+      setValue('');
+    }, [
+      value,
+      disabled,
+      setValue,
+      askUser,
+      attachments,
+      setAttachments,
+      onSubmit
+    ]);
+
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          if (!isComposing) {
+            e.preventDefault();
+            submit();
           }
-        }}
-      >
-        {attachments.length > 0 ? (
-          <Box mt={2}>
-            <Attachments />
-          </Box>
-        ) : null}
-        <TextField
-          inputRef={ref}
-          id="copilot-chat-input"
-          multiline
-          variant="standard"
-          autoComplete="false"
-          placeholder={t(
-            'components.organisms.chat.inputBox.input.placeholder'
-          )}
-          disabled={disabled}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onCompositionStart={() => setIsComposing(true)}
-          onCompositionEnd={() => setIsComposing(false)}
-          value={value}
-          fullWidth
-          InputProps={{
-            disableUnderline: true,
-            sx: {
-              pl: 0,
-              padding: "6px",
-              borderRadius: "8px",
-              width: '100%',
-              backgroundColor: "white"
-            },
-            endAdornment: (
-              <Box display={"flex"} alignItems={"center"} justifyContent={"center"} sx={{ mr: 0, backgroundColor: themeColor !== "" ? themeColor : "#ededed", borderRadius: "4px" }}>
-                <SubmitButton
-                  onSubmit={submit}
-                  disabled={disabled || (!loading && !value)}
-                />
-              </Box>
-            )
-          }}
-        />
+        } else if (e.key === 'ArrowUp') {
+          const lineCount = getLineCount(e.currentTarget as HTMLDivElement);
+          if (lineCount <= 1) {
+            setInputHistory((old) => ({ ...old, open: true }));
+          }
+        }
+      },
+      [submit, setInputHistory, isComposing]
+    );
+
+    return (
+      <>
         <Stack
-          direction="row"
-          alignItems="center"
-          color="text.secondary"
-          justifyContent="space-between"
+          sx={{
+            borderTop: (theme) => `2px solid #ededed`,
+            margin: 1,
+            paddingTop: 1,
+            paddingX: 1,
+            boxShadow: 'box-shadow: 0px 2px 4px 0px #0000000D',
+            gap: 1,
+            textarea: {
+              height: '34px',
+              maxHeight: '30vh',
+              overflowY: 'auto !important',
+              resize: 'none',
+              color: 'black',
+              lineHeight: '24px'
+            }
+          }}
         >
-          <Stack direction="row" alignItems="center" marginLeft={-1}>
-            {/* <UploadButton
+          {attachments.length > 0 ? (
+            <Box mt={2}>
+              <Attachments />
+            </Box>
+          ) : null}
+          <TextField
+            inputRef={ref}
+            id="copilot-chat-input"
+            multiline
+            variant="standard"
+            autoComplete="false"
+            placeholder={t(
+              'components.organisms.chat.inputBox.input.placeholder'
+            )}
+            disabled={disabled}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
+            value={value}
+            fullWidth
+            InputProps={{
+              disableUnderline: true,
+              sx: {
+                pl: 0,
+                padding: '6px',
+                borderRadius: '8px',
+                width: '100%',
+                backgroundColor: 'white'
+              },
+              endAdornment: (
+                <Box
+                  display={'flex'}
+                  alignItems={'center'}
+                  justifyContent={'center'}
+                  sx={{
+                    mr: 0,
+                    backgroundColor: themeColor !== '' ? themeColor : '#ededed',
+                    borderRadius: '4px'
+                  }}
+                >
+                  <SubmitButton
+                    onSubmit={submit}
+                    disabled={disabled || (!loading && !value)}
+                  />
+                </Box>
+              )
+            }}
+          />
+          <Stack
+            direction="row"
+            alignItems="center"
+            color="text.secondary"
+            justifyContent="space-between"
+          >
+            <Stack direction="row" alignItems="center" marginLeft={-1}>
+              {/* <UploadButton
                 disabled={disabled}
                 fileSpec={fileSpec}
                 onFileUploadError={onFileUploadError}
                 onFileUpload={onFileUpload}
               /> */}
-            {chatSettingsInputs.length > 0 && (
-              <IconButton
-                id="chat-settings-open-modal"
-                disabled={disabled}
-                color="inherit"
-                onClick={() => setChatSettingsOpen(true)}
-                size="small"
-              >
-                <TuneIcon fontSize="small" />
-              </IconButton>
-            )}
-            {/* <MicButton disabled={disabled} /> */}
+              {chatSettingsInputs.length > 0 && (
+                <IconButton
+                  id="chat-settings-open-modal"
+                  disabled={disabled}
+                  color="inherit"
+                  onClick={() => setChatSettingsOpen(true)}
+                  size="small"
+                >
+                  <TuneIcon fontSize="small" />
+                </IconButton>
+              )}
+              {/* <MicButton disabled={disabled} /> */}
+            </Stack>
+            <Box>{branding && <WaterMark />}</Box>
           </Stack>
-          <Box>
-            <WaterMark />
-          </Box>
         </Stack>
-      </Stack>
-    </>
-  );
-});
+      </>
+    );
+  }
+);
 
 export default Input;
-
-
-
 
 // themeColor: string
 // themeColor={themeColor}

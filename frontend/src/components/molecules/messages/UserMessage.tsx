@@ -14,15 +14,17 @@ import {
 import { AccentButton, RegularButton } from 'components/atoms/buttons';
 import { Translator } from 'components/i18n';
 
-import PencilIcon from 'assets/pencil';
+// import PencilIcon from 'assets/pencil';
 
 interface Props {
   message: IStep;
+  isUserContent: string;
 }
 
 export default function UserMessage({
   message,
-  children
+  children,
+  isUserContent
 }: React.PropsWithChildren<Props>) {
   const config = useConfig();
   const { askUser, loading } = useContext(MessageContext);
@@ -61,9 +63,8 @@ export default function UserMessage({
         width="100%"
         sx={{
           '&:hover .edit-icon': {
-            visibility: 'visible'
-          },
-          
+            visibility: 'hidden'
+          }
         }}
       >
         {!isEditing && isEditable && (
@@ -75,59 +76,59 @@ export default function UserMessage({
             className="edit-icon"
             onClick={() => setIsEditing(true)}
             disabled={disabled}
-          >
-            <PencilIcon sx={{ height: 16, width: 16 }} />
-          </IconButton>
+          ></IconButton>
         )}
-        <Box
-          sx={{
-            px: 2.5,
-            position: 'relative',
-            borderRadius: '1.5rem',
-            backgroundColor: '#f1f1f1',
-            width: isEditing ? '100%' : 'auto',
-            maxWidth: isEditing ? '100%' : '70%',
-            flexGrow: isEditing ? 1 : 0,
-            ml: isEditable ? 'default' : 'auto'
-          }}
-        >
-          {isEditing ? (
-            <Stack py={1.5}>
-              <TextField
-                id="edit-chat-input"
-                multiline
-                autoFocus
-                variant="standard"
-                autoComplete="off"
-                defaultValue={message.output}
-                fullWidth
-                inputRef={textFieldRef}
-                InputProps={{
-                  disableUnderline: true,
-                  sx: {
-                    pl: 0,
-                    width: '100%'
-                  }
-                }}
-              />
-              <Box display="flex" justifyContent="flex-end" gap={1}>
-                <RegularButton onClick={() => setIsEditing(false)}>
-                  <Translator path="components.molecules.newChatDialog.cancel" />
-                </RegularButton>
-                <AccentButton
-                  className="confirm-edit"
-                  disabled={disabled}
-                  variant="outlined"
-                  onClick={handleEdit}
-                >
-                  <Translator path="components.molecules.newChatDialog.confirm" />
-                </AccentButton>
-              </Box>
-            </Stack>
-          ) : (
-            children
-          )}
-        </Box>
+        <div className={`${isUserContent ? isUserContent : ''}`}>
+          <Box
+            sx={{
+              px: 2.5,
+              position: 'relative',
+              borderRadius: '1.5rem',
+              backgroundColor: '#f1f1f1',
+              width: isEditing ? '100%' : 'auto',
+              maxWidth: isEditing ? '100%' : '70%',
+              flexGrow: isEditing ? 1 : 0,
+              ml: isEditable ? 'default' : 'auto'
+            }}
+          >
+            {isEditing ? (
+              <Stack py={1.5}>
+                <TextField
+                  id="edit-chat-input"
+                  multiline
+                  autoFocus
+                  variant="standard"
+                  autoComplete="off"
+                  defaultValue={message.output}
+                  fullWidth
+                  inputRef={textFieldRef}
+                  InputProps={{
+                    disableUnderline: true,
+                    sx: {
+                      pl: 0,
+                      width: '100%'
+                    }
+                  }}
+                />
+                <Box display="flex" justifyContent="flex-end" gap={1}>
+                  <RegularButton onClick={() => setIsEditing(false)}>
+                    <Translator path="components.molecules.newChatDialog.cancel" />
+                  </RegularButton>
+                  <AccentButton
+                    className="confirm-edit"
+                    disabled={disabled}
+                    variant="outlined"
+                    onClick={handleEdit}
+                  >
+                    <Translator path="components.molecules.newChatDialog.confirm" />
+                  </AccentButton>
+                </Box>
+              </Stack>
+            ) : (
+              children
+            )}
+          </Box>
+        </div>
       </Box>
     </Box>
   );

@@ -14,3 +14,9 @@
 .ai-message .markdown-body > :first-child {
   margin: 0;
 }
+.MuiTypography-root {
+  font-family: 'Noto Sans', sans-serif !important;
+}
+.chat-user-message {
+  display: flex;
+}

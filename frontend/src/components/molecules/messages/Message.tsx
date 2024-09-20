@@ -12,7 +12,9 @@ import { MessageAvatar } from './components/Avatar';
 import { MessageActions } from './components/MessageActions';
 import { MessageButtons } from './components/MessageButtons';
 import { MessageContent } from './components/MessageContent';
+
 import { useLayoutMaxWidth } from 'hooks/useLayoutMaxWidth';
+
 import { type IAction, type IMessageElement, type IStep } from 'client-types/';
 
 import { Messages } from './Messages';
@@ -30,7 +32,8 @@ interface Props {
   scorableRun?: IStep;
   themeColor: string;
   hideFeedback: boolean;
-  fontColor: string
+  fontColor: string;
+  avatarUrl: string;
 }
 
 const Message = memo(
@@ -45,7 +48,8 @@ const Message = memo(
     scorableRun,
     themeColor,
     hideFeedback,
-    fontColor
+    fontColor,
+    avatarUrl
   }: Props) => {
     const {
       highlightedMessage,
@@ -74,6 +78,7 @@ const Message = memo(
       }
       return (
         <Messages
+          avatarUrl={avatarUrl}
           messages={message.steps}
           elements={elements}
           actions={actions}
@@ -87,15 +92,13 @@ const Message = memo(
       );
     }
     useEffect(() => {
-      if(isUserMessage){
-        console.log(message, "user-message");
-        
+      if (isUserMessage) {
+        console.log(message, 'user-message');
       }
-      if(!message.steps || message.steps.length === 0){
-        console.log(message, "bot-message");
-
+      if (!message.steps || message.steps.length === 0) {
+        console.log(message, 'bot-message');
       }
-    }, [])
+    }, []);
     return (
       <>
         <Box
@@ -132,18 +135,21 @@ const Message = memo(
               {/* User message is displayed differently */}
               {isUserMessage ? (
                 <Box display="flex" flexDirection="column" flexGrow={1}>
-                  <UserMessage message={message}>
+                  <UserMessage
+                    message={message}
+                    isUserContent="chat-user-message"
+                  >
                     <MessageContent
-                      elements={elements}
                       message={message}
+                      linkColor="black"
+                      elements={elements}
                       preserveSize={
                         !!message.streaming || !defaultCollapseContent
                       }
                       allowHtml={allowHtml}
                       latex={latex}
                       style={{
-                        color: "black",
-                        
+                        color: 'black'
                       }}
                     />
                   </UserMessage>
@@ -152,17 +158,23 @@ const Message = memo(
                 <Stack
                   direction="row"
                   gap="1rem"
-                  width="80%"
+                  width="fit-content"
                   className="ai-message"
+                  maxWidth={'70%'}
                 >
                   {!isStep || !indent ? (
-                    <MessageAvatar author={message.name} hide={!showAvatar} />
+                    <MessageAvatar
+                      avatarUrl={avatarUrl}
+                      author={message.name}
+                      hide={!showAvatar}
+                    />
                   ) : null}
                   {/* Display the step and its children */}
                   {isStep ? (
                     <Step step={message} isRunning={isRunning}>
                       {message.steps ? (
                         <Messages
+                          avatarUrl={avatarUrl}
                           messages={message.steps.filter(
                             (s) => !s.type.includes('message')
                           )}
@@ -176,6 +188,7 @@ const Message = memo(
                         />
                       ) : null}
                       <MessageContent
+                        linkColor={fontColor}
                         elements={elements}
                         message={message}
                         preserveSize={
@@ -187,7 +200,10 @@ const Message = memo(
                       {actions?.length ? (
                         <MessageActions message={message} actions={actions} />
                       ) : null}
-                      <MessageButtons hideFeedback={hideFeedback} message={message} />
+                      <MessageButtons
+                        hideFeedback={hideFeedback}
+                        message={message}
+                      />
                     </Step>
                   ) : (
                     // Display an assistant message
@@ -198,13 +214,16 @@ const Message = memo(
                       position="relative"
                     >
                       <MessageContent
-                      style={
-                        {backgroundColor: themeColor !== themeColor ? "#ededed" : `${themeColor}`  ,
-                        padding: "12px",
-                        borderRadius: "6px",
-                        color: fontColor !== "" ? fontColor : "unset"}
-                      
-                      }
+                        linkColor={fontColor}
+                        style={{
+                          backgroundColor:
+                            themeColor !== themeColor
+                              ? '#ededed'
+                              : `${themeColor}`,
+                          padding: '12px',
+                          borderRadius: '6px',
+                          color: fontColor !== '' ? fontColor : 'unset'
+                        }}
                         elements={elements}
                         message={message}
                         preserveSize={
@@ -220,7 +239,11 @@ const Message = memo(
                         <MessageActions message={message} actions={actions} />
                       ) : null}
                       {scorableRun && isScorable ? (
-                        <MessageButtons hideFeedback={hideFeedback} message={message} run={scorableRun} />
+                        <MessageButtons
+                          hideFeedback={hideFeedback}
+                          message={message}
+                          run={scorableRun}
+                        />
                       ) : null}
                     </Stack>
                   )}
@@ -232,6 +255,7 @@ const Message = memo(
         {/* Make sure the child assistant messages of a step are displayed at the root level. */}
         {message.steps && isStep ? (
           <Messages
+            avatarUrl={avatarUrl}
             messages={message.steps.filter((s) => s.type.includes('message'))}
             elements={elements}
             actions={actions}
@@ -246,6 +270,7 @@ const Message = memo(
         {/* Display the child steps if the message is not a step (usually a user message). */}
         {message.steps && !isStep ? (
           <Messages
+            avatarUrl={avatarUrl}
             messages={message.steps}
             elements={elements}
             actions={actions}

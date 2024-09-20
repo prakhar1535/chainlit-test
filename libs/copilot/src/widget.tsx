@@ -4,6 +4,7 @@ import { IWidgetConfig } from 'types';
 
 import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import Fab from '@mui/material/Fab';
 import Fade from '@mui/material/Fade';
 
@@ -12,16 +13,25 @@ import MessageCircleIcon from '@chainlit/app/src/assets/MessageCircle';
 interface Props {
   config: IWidgetConfig;
 }
-
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  message: string;
+}
 export default function Widget({ config }: Props) {
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>();
+  const [branding, setBranding] = useState<boolean>(true);
+  const [status, setStatus] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [chatbotName, setChatbotName] = useState<string>('');
+  const [fAvatarUrl, setFAvatarUrl] = useState<string>('');
   const customStyle = config.button?.style || {};
   const buttonHeight = customStyle.height || customStyle.size || '60px';
   const popoverBackground = config.popoverBackground || undefined;
   const themeColor = config.themeColor || undefined;
-  const avatarUrl = config.avatarUrl || undefined;
   const fontColor = config.fontColor || undefined;
-  const hideFeedback = config.hideFeedback || undefined
+  const hideFeedback = config.hideFeedback || undefined;
+  const chatbotId = config.chatBotID || undefined;
   const style = {
     width: customStyle.width || customStyle.size || '60px',
     height: buttonHeight,
@@ -38,36 +48,125 @@ export default function Widget({ config }: Props) {
   };
 
   const isPopoverOpen = Boolean(anchorEl);
-  const sendChatbotID = async (chatBotID: string) => {
+  const fetchChatHistory = async (userId: string): Promise<ChatMessage[]> => {
     try {
-      const response = await fetch('http://0.0.0.0:8066/chatbot', {
+      const response = await fetch(
+        'https://www.app-backend.galadon.com/get-chat-history',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userId })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch chat history');
+      }
+
+      const data = await response.json();
+      return data.data as ChatMessage[];
+    } catch (error) {
+      console.error('Error fetching chat history:', error);
+      return [];
+    }
+  };
+  const sendChatbotID = async (chatBotID: string) => {
+    setIsLoading(true);
+    try {
+      let userId = localStorage.getItem('userId');
+
+      if (!userId) {
+        const createUserResponse = await fetch(
+          'https://www.app-backend.galadon.com/create-user',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ chatbotId: chatBotID })
+          }
+        );
+
+        if (!createUserResponse.ok) {
+          throw new Error('Failed to create user');
+        }
+
+        const createUserData = await createUserResponse.json();
+        userId = createUserData.data[0].userId;
+        localStorage.setItem('userId', userId);
+      }
+
+      const response = await fetch('https://www.livechat.galadon.com/chatbot', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ chatbot_id: chatBotID }),
+        body: JSON.stringify({ chatbot_id: chatBotID, user_id: userId })
       });
+
       if (!response.ok) {
         throw new Error('Failed to send chatbot ID');
       }
-  
+
       const data = await response.json();
       console.log('Response:', data);
+
+      const history = await fetchChatHistory(userId);
+      setChatHistory(history);
+      // New request to get branding information
+      const brandingResponse = await fetch(
+        'https://www.app-backend.galadon.com/get-sessions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ chatbotId: chatBotID })
+        }
+      );
+
+      if (!brandingResponse.ok) {
+        throw new Error('Failed to get branding information');
+      }
+
+      const brandingData = await brandingResponse.json();
+      setBranding(brandingData.branding);
+      setStatus(brandingData.status);
+      setChatbotName(brandingData.chatbot_name);
+      setFAvatarUrl(brandingData.avatarUrl);
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (chatbotId) {
+      sendChatbotID(chatbotId);
+    }
+  }, [chatbotId]);
+  console.log(chatHistory, 'chayHistory');
+
   return (
     <>
       <PopOver
-        fontColor={fontColor || ""}
+        // chatHistory={chatHistory}
+        chatbot_name={chatbotName || 'Galadon'}
+        status={status}
+        branding={branding}
+        fontColor={fontColor || ''}
         anchorEl={anchorEl}
         buttonHeight={buttonHeight}
         popoverBackground={popoverBackground ? popoverBackground : ''}
-        themeColor={themeColor ? themeColor : ""}
-        avatarUrl={avatarUrl ? avatarUrl : ""}
+        themeColor={themeColor ? themeColor : ''}
+        avatarUrl={fAvatarUrl ? fAvatarUrl : ''}
         hideFeedback={hideFeedback || false}
+        handleClick={() => sendChatbotID(chatbotId || '')}
       />
+
       <Fab
         disableRipple
         aria-label="open copilot"
@@ -80,9 +179,11 @@ export default function Widget({ config }: Props) {
           zIndex: 1000,
           ...style
         }}
-        onClick={(event: React.MouseEvent<HTMLElement>) =>
-          setAnchorEl(anchorEl ? null : event.currentTarget)
-        }
+        onClick={(event: React.MouseEvent<HTMLElement>) => {
+          if (!isLoading) {
+            setAnchorEl(anchorEl ? null : event.currentTarget);
+          }
+        }}
       >
         <Fade in={!isPopoverOpen} timeout={300}>
           <Box

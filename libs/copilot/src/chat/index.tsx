@@ -5,7 +5,25 @@ import { useChatInteract, useChatSession } from '@chainlit/react-client';
 
 import ChatBody from './body';
 
-export default function ChatWrapper({themeColor, hideFeedback, fontColor} : {themeColor: string; hideFeedback: boolean; fontColor: string}) {
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  message: string;
+}
+export default function ChatWrapper({
+  themeColor,
+  hideFeedback,
+  fontColor,
+  branding,
+  avatarUrl,
+  chatHistory
+}: {
+  themeColor: string;
+  hideFeedback: boolean;
+  fontColor: string;
+  branding: boolean;
+  avatarUrl: string;
+  chatHistory: ChatMessage[];
+}) {
   const { accessToken } = useContext(WidgetContext);
   const { connect, session } = useChatSession();
   const { sendMessage } = useChatInteract();
@@ -22,5 +40,14 @@ export default function ChatWrapper({themeColor, hideFeedback, fontColor} : {the
     window.sendChainlitMessage = sendMessage;
   }, [sendMessage]);
 
-  return <ChatBody  fontColor={fontColor} hideFeedback={hideFeedback} themeColor={themeColor}/>;
+  return (
+    <ChatBody
+      chatHistory={chatHistory}
+      avatarUrl={avatarUrl}
+      branding={branding}
+      fontColor={fontColor}
+      hideFeedback={hideFeedback}
+      themeColor={themeColor}
+    />
+  );
 }

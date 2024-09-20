@@ -22,9 +22,13 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     widgetConfig: {
-      chainlitServer: 'https://galadon.sandbox.jeemstudio.com/chainlit',
+      chainlitServer: 'http://livechat.galadon.com/live',
       theme: 'light',
-      popoverBackground: 'red'
+      themeColor: 'lightBlue',
+      fontColor: 'white',
+      chatBotID: '6f132ee6-ec3d-49a9-b322-78490af27d71',
+      avatarUrl:
+        'https://1b9ec2f03c80658a2d24eed1bd587405.cdn.bubble.io/f1726514144724x771264442655368300/png-clipart-re%CC%81sume%CC%81-writing-resume-curriculum-vitae-job-job-seeker-template-resume%20dBackground%20Removed%201.png'
     }
   }
 };
@@ -32,19 +36,10 @@ export const Primary: Story = {
 export const Secondary: Story = {
   args: {
     widgetConfig: {
-      chainlitServer: 'https://galadon.sandbox.jeemstudio.com/chainlit',
+      chainlitServer: 'http://0.0.0.0:8066/live',
       theme: 'dark',
       fontFamily: '"Nunito Sans"',
-
-      button: {
-        imageUrl:
-          'https://steelbluemedia.com/wp-content/uploads/2019/06/new-google-favicon-512.png',
-        style: {
-          bgcolor: 'transparent',
-          bgcolorHover: 'transparent',
-          color: 'black'
-        }
-      }
+      chatBotID: 'e297323a-2b65-488b-b320-646b744204ab'
     }
   }
 };

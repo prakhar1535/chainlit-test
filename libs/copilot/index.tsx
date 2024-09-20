@@ -1,6 +1,6 @@
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 // @ts-expect-error inlined
@@ -9,6 +9,7 @@ import { IStep } from '@chainlit/react-client';
 
 // @ts-expect-error inlined
 import sonnerCss from './sonner.css?inline';
+import './test.css';
 // @ts-expect-error inlined
 import hljsStyles from 'highlight.js/styles/monokai-sublime.css?inline';
 
@@ -24,7 +25,7 @@ declare global {
     mountChainlitWidget: (config: IWidgetConfig) => void;
     unmountChainlitWidget: () => void;
     sendChainlitMessage: (message: IStep) => void;
-    cl_chatbotId: string;  // Add this line
+    cl_chatbotId: string; // Add this line
   }
 }
 
@@ -45,7 +46,7 @@ window.mountChainlitWidget = (config: IWidgetConfig) => {
   });
 
   window.cl_shadowRootElement = shadowRootElement;
-  window.cl_chatbotId = config.chatBotID || "";  
+  window.cl_chatbotId = config.chatBotID || '';
   // Send chatbotId to backend
 
   root = ReactDOM.createRoot(shadowRootElement);
@@ -71,9 +72,9 @@ window.sendChainlitMessage = (message: IStep) => {
   // Include chatbotId in the message
   const messageWithChatbotId = {
     ...message,
-    chatbotId: window.cl_chatbotId,
+    chatbotId: window.cl_chatbotId
   };
-  
+
   // Here you would typically send this message to your backend
   console.info('Sending message with chatbotId:', messageWithChatbotId);
 };

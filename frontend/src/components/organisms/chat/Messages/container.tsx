@@ -35,9 +35,10 @@ interface Props {
     feedback: string
   ) => void;
   callAction?: (action: IAction) => void;
-  themeColor:string
-  hideFeedback: boolean
-  fontColor: string
+  themeColor: string;
+  hideFeedback: boolean;
+  fontColor: string;
+  avatarUrl?: string;
 }
 
 const MessageContainer = memo(
@@ -52,7 +53,8 @@ const MessageContainer = memo(
     callAction,
     themeColor,
     hideFeedback,
-    fontColor
+    fontColor,
+    avatarUrl
   }: Props) => {
     const { config } = useConfig();
     const setSideView = useSetRecoilState(sideViewState);
@@ -139,6 +141,7 @@ const MessageContainer = memo(
 
     return (
       <CMessageContainer
+        avatarUrl={avatarUrl || ''}
         actions={messageActions}
         elements={elements}
         messages={messages}

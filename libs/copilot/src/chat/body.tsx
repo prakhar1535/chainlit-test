@@ -3,10 +3,11 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Alert, Box } from '@mui/material';
+import { Alert, Box, Paper, Typography } from '@mui/material';
 
 import { ErrorBoundary } from '@chainlit/app/src/components/atoms/ErrorBoundary';
 import ScrollContainer from '@chainlit/app/src/components/molecules/messages/ScrollContainer';
+import { MessageAvatar } from '@chainlit/app/src/components/molecules/messages/components/Avatar';
 import { TaskList } from '@chainlit/app/src/components/molecules/tasklist/TaskList';
 import DropScreen from '@chainlit/app/src/components/organisms/chat/dropScreen';
 import ChatSettingsModal from '@chainlit/app/src/components/organisms/chat/settings';
@@ -25,12 +26,27 @@ import { ElementSideView } from 'components/ElementSideView';
 import { InputBox } from 'components/InputBox';
 
 import Messages from './messages';
+
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  message: string;
+}
 interface Props {
   themeColor: string;
-  hideFeedback: boolean
-  fontColor: string
+  hideFeedback: boolean;
+  fontColor: string;
+  branding: boolean;
+  avatarUrl: string;
+  chatHistory: ChatMessage[];
 }
-const Chat:React.FC<Props> = ({themeColor, hideFeedback, fontColor}) => {
+const Chat: React.FC<Props> = ({
+  themeColor,
+  hideFeedback,
+  fontColor,
+  branding,
+  avatarUrl,
+  chatHistory
+}) => {
   const { config } = useConfig();
   const setAttachments = useSetRecoilState(attachmentsState);
   const setThreads = useSetRecoilState(threadHistoryState);
@@ -165,8 +181,7 @@ const Chat:React.FC<Props> = ({themeColor, hideFeedback, fontColor}) => {
       display="flex"
       width="100%"
       flexGrow={1}
-      overflow="auto"
-   
+      overflow={'auto'}
     >
       {upload ? (
         <>
@@ -207,9 +222,59 @@ const Chat:React.FC<Props> = ({themeColor, hideFeedback, fontColor}) => {
           >
             <WelcomeScreen hideLogo />
             <Box my={1} />
-            <Messages  fontColor={fontColor} hideFeedback={hideFeedback} themeColor={themeColor}/>
+            <Box
+              display={'flex'}
+              flexDirection={'column'}
+              width={'100%'}
+              alignItems={'center'}
+            >
+              <Box display={'flex'} flexDirection={'column'} width={'100%'}>
+                {chatHistory.map((message, index) => (
+                  <Box
+                    px={'16px'}
+                    pb={message.role === 'assistant' ? '16px' : '16px'}
+                    gap={message.role === 'assistant' ? '1rem' : 0}
+                    key={index}
+                    sx={{
+                      display: 'flex',
+                      justifyContent:
+                        message.role === 'user' ? 'flex-end' : 'flex-start',
+                      mb: 2
+                    }}
+                  >
+                    {message.role === 'assistant' && (
+                      <MessageAvatar avatarUrl={avatarUrl} />
+                    )}
+                    <Paper
+                      // elevation={1}
+                      sx={{
+                        boxShadow: 'none',
+                        px: message.role === 'user' ? '16px' : '12px',
+                        py: message.role === 'user' ? '20px' : '12px',
+                        borderRadius:
+                          message.role === 'user' ? '1.5rem' : '6px',
+                        maxWidth: '70%',
+                        bgcolor:
+                          message.role === 'user' ? '#f1f1f1' : themeColor,
+                        color: message.role === 'user' ? 'black' : fontColor
+                      }}
+                    >
+                      <Typography variant="body1">{message.message}</Typography>
+                    </Paper>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+
+            <Messages
+              avatarUrl={avatarUrl}
+              fontColor={fontColor}
+              hideFeedback={hideFeedback}
+              themeColor={themeColor}
+            />
           </ScrollContainer>
           <InputBox
+            branding={branding}
             fileSpec={fileSpec}
             onFileUpload={onFileUpload}
             onFileUploadError={onFileUploadError}

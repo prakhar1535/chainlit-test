@@ -15,9 +15,10 @@ interface Props {
   indent: number;
   isRunning?: boolean;
   scorableRun?: IStep;
-  themeColor: string
+  themeColor: string;
   hideFeedback: boolean;
-  fontColor: string
+  fontColor: string;
+  avatarUrl: string;
 }
 
 const CL_RUN_NAMES = ['on_chat_start', 'on_message', 'on_audio_end'];
@@ -39,7 +40,18 @@ const hasAssistantMessage = (step: IStep): boolean => {
 };
 
 const Messages = memo(
-  ({ messages, elements, actions, indent, isRunning, scorableRun,fontColor, themeColor, hideFeedback }: Props) => {
+  ({
+    messages,
+    elements,
+    actions,
+    indent,
+    isRunning,
+    scorableRun,
+    fontColor,
+    themeColor,
+    hideFeedback,
+    avatarUrl
+  }: Props) => {
     const messageContext = useContext(MessageContext);
     const { config } = useConfig();
     return (
@@ -65,6 +77,7 @@ const Messages = memo(
               <>
                 {m.steps?.length ? (
                   <Messages
+                    avatarUrl={avatarUrl}
                     messages={m.steps}
                     elements={elements}
                     actions={actions}
@@ -92,6 +105,7 @@ const Messages = memo(
               );
             return (
               <Message
+                avatarUrl={avatarUrl}
                 message={m}
                 elements={elements}
                 actions={actions}

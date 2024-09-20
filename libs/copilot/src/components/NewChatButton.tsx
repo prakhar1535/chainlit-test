@@ -1,27 +1,24 @@
-import { useState } from 'react';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { Box, IconButton, IconButtonProps, Tooltip } from '@mui/material';
 
-import { Box, IconButton, Tooltip } from '@mui/material';
-
-import SquarePenIcon from '@chainlit/app/src/assets/squarePen';
 import { Translator } from '@chainlit/app/src/components/i18n';
-import NewChatDialog from '@chainlit/app/src/components/molecules/newChatDialog';
 import { useChatInteract } from '@chainlit/react-client';
 
-export default function NewChatButton() {
-  const [open, setOpen] = useState(false);
+interface NewChatButtonProps extends IconButtonProps {
+  handleClick?: () => void;
+}
+
+export default function NewChatButton({
+  handleClick,
+  ...props
+}: NewChatButtonProps) {
   const { clear } = useChatInteract();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleConfirm = () => {
+  const handleNewChat = () => {
     clear();
-    handleClose();
+    if (handleClick) {
+      handleClick();
+    }
   };
 
   return (
@@ -29,15 +26,10 @@ export default function NewChatButton() {
       <Tooltip
         title={<Translator path="components.molecules.newChatButton.newChat" />}
       >
-        <IconButton edge="end" id="new-chat-button" onClick={handleClickOpen}>
-          <SquarePenIcon sx={{ width: 20, height: 20, color: "white" }} />
+        <IconButton id="new-chat-button" onClick={handleNewChat} {...props}>
+          <RefreshIcon sx={{ height: 20, width: 20, color: 'white' }} />
         </IconButton>
       </Tooltip>
-      <NewChatDialog
-        open={open}
-        handleClose={handleClose}
-        handleConfirm={handleConfirm}
-      />
     </Box>
   );
 }

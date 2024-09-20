@@ -26,6 +26,7 @@ import type { IMessageElement } from 'client-types/';
 import BlinkingCursor from './BlinkingCursor';
 
 interface Props {
+  linkColor?: string;
   allowHtml?: boolean;
   latex?: boolean;
   refElements?: IMessageElement[];
@@ -78,7 +79,13 @@ const cursorPlugin = () => {
   };
 };
 
-function Markdown({ refElements, allowHtml, latex, children }: Props) {
+function Markdown({
+  refElements,
+  allowHtml,
+  latex,
+  children,
+  linkColor
+}: Props) {
   const rehypePlugins = useMemo(() => {
     let rehypePlugins: PluggableList = [];
     if (allowHtml) {
@@ -114,7 +121,13 @@ function Markdown({ refElements, allowHtml, latex, children }: Props) {
           } else {
             return (
               // @ts-ignore
-              <Link {...props} target="_blank">
+              <Link
+                sx={{
+                  color: linkColor
+                }}
+                {...props}
+                target="_blank"
+              >
                 {children}
               </Link>
             );

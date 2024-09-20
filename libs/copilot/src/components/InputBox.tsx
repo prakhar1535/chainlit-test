@@ -23,6 +23,7 @@ interface Props {
   setAutoScroll: (autoScroll: boolean) => void;
   autoScroll?: boolean;
   themeColor: string;
+  branding: boolean;
 }
 
 const InputBox = memo(
@@ -32,7 +33,8 @@ const InputBox = memo(
     // onFileUploadError,
     setAutoScroll,
     autoScroll,
-    themeColor
+    themeColor,
+    branding
   }: Props) => {
     const setInputHistory = useSetRecoilState(inputHistoryState);
 
@@ -54,7 +56,7 @@ const InputBox = memo(
           const MAX_SIZE = 50;
           const inputs = [...(old.inputs || [])];
           inputs.push({
-            content: msg,
+            content: 'Hi',
             createdAt: new Date().getTime()
           });
 
@@ -95,13 +97,12 @@ const InputBox = memo(
     );
 
     return (
-      <Box display="flex" position="relative" flexDirection="column" sx={{
-       
-      }}>
+      <Box display="flex" position="relative" flexDirection="column" sx={{}}>
         {!autoScroll ? (
           <ScrollDownButton onClick={() => setAutoScroll(true)} />
         ) : null}
         <Input
+          branding={branding}
           // fileSpec={fileSpec}
           // onFileUpload={onFileUpload}
           // onFileUploadError={onFileUploadError}

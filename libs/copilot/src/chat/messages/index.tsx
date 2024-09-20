@@ -17,7 +17,17 @@ import {
 
 import MessageContainer from './container';
 
-const Messages = ({themeColor, hideFeedback, fontColor} : {themeColor: string;   hideFeedback: boolean; fontColor: string}): JSX.Element => {
+const Messages = ({
+  themeColor,
+  hideFeedback,
+  fontColor,
+  avatarUrl
+}: {
+  themeColor: string;
+  hideFeedback: boolean;
+  fontColor: string;
+  avatarUrl: string;
+}): JSX.Element => {
   const apiClient = useContext(ChainlitContext);
   const { accessToken } = useContext(WidgetContext);
 
@@ -90,6 +100,7 @@ const Messages = ({themeColor, hideFeedback, fontColor} : {themeColor: string;  
 
   return (
     <MessageContainer
+      avatarUrl={avatarUrl}
       loading={loading}
       askUser={askUser}
       actions={actions}

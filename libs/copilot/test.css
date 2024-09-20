@@ -1,0 +1,6 @@
+#chainlit-copilot {
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 24px !important;
+  z-index: 999999 !important;
+}

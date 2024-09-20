@@ -129,7 +129,7 @@ function App() {
         position="top-right"
         toastOptions={{
           style: {
-            fontFamily: theme.typography.fontFamily,
+            fontFamily: 'Noto Sans, sans-serif',
             background: theme.palette.background.paper,
             border: `1px solid ${theme.palette.divider}`,
             color: theme.palette.text.primary

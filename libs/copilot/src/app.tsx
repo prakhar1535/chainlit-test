@@ -5,6 +5,7 @@ import { Toaster } from 'sonner';
 import { IWidgetConfig } from 'types';
 import Widget from 'widget';
 
+import CircularProgress from '@mui/material/CircularProgress';
 import { Theme, ThemeProvider } from '@mui/material/styles';
 
 import { overrideTheme } from '@chainlit/app/src/App';
@@ -32,6 +33,7 @@ export default function App({ widgetConfig }: Props) {
   const [theme, setTheme] = useState<Theme | null>(null);
   const { i18n } = useTranslation();
   const languageInUse = navigator.language || 'en-US';
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setAccessToken(widgetConfig.accessToken);
@@ -39,66 +41,90 @@ export default function App({ widgetConfig }: Props) {
 
   useEffect(() => {
     if (!config) return;
-    const themeVariant = widgetConfig.theme || config.ui.theme.default;
-    window.theme = config.ui.theme;
-    widgetConfig.theme = themeVariant;
-    setSettings((old) => ({
-      ...old,
-      theme: themeVariant
-    }));
+    setIsLoading(true);
 
-    const _theme = overrideTheme(
-      makeTheme(themeVariant || settings.theme, widgetConfig.fontFamily, {
-        // Force mobile view
-        values: {
-          xs: 0,
-          sm: 550,
-          md: 800,
-          lg: 1300,
-          xl: 10000
+    const loadData = async () => {
+      try {
+        const themeVariant = widgetConfig.theme || config.ui.theme.default;
+        window.theme = config.ui.theme;
+        widgetConfig.theme = themeVariant;
+        setSettings((old) => ({
+          ...old,
+          theme: themeVariant
+        }));
+
+        const _theme = overrideTheme(
+          makeTheme(themeVariant || settings.theme, widgetConfig.fontFamily, {
+            // Force mobile view
+            values: {
+              xs: 0,
+              sm: 550,
+              md: 800,
+              lg: 1300,
+              xl: 10000
+            }
+          })
+        );
+        if (!_theme.components) {
+          _theme.components = {};
         }
-      })
-    );
-    if (!_theme.components) {
-      _theme.components = {};
-    }
-    _theme.components = {
-      ..._theme.components,
-      MuiPopover: {
-        defaultProps: {
-          container: window.cl_shadowRootElement
-        }
-      },
-      MuiPopper: {
-        defaultProps: {
-          container: window.cl_shadowRootElement
-        }
-      },
-      MuiModal: {
-        defaultProps: {
-          container: window.cl_shadowRootElement
-        }
+        _theme.components = {
+          ..._theme.components,
+          MuiPopover: {
+            defaultProps: {
+              container: window.cl_shadowRootElement
+            }
+          },
+          MuiPopper: {
+            defaultProps: {
+              container: window.cl_shadowRootElement
+            }
+          },
+          MuiModal: {
+            defaultProps: {
+              container: window.cl_shadowRootElement
+            }
+          }
+        };
+
+        setTheme(_theme);
+
+        const res = await apiClient.get(
+          `/project/translations?language=${languageInUse}`,
+          accessToken
+        );
+        const data = await res.json();
+        i18n.addResourceBundle(languageInUse, 'translation', data.translation);
+        i18n.changeLanguage(languageInUse);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    setTheme(_theme);
-
-    apiClient
-      .get(`/project/translations?language=${languageInUse}`, accessToken)
-      .then((res) => res.json())
-      .then((data) => {
-        i18n.addResourceBundle(languageInUse, 'translation', data.translation);
-        i18n.changeLanguage(languageInUse);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    loadData();
   }, [config]);
 
   if (!config || !theme) {
     return null;
   }
-  
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%'
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Toaster

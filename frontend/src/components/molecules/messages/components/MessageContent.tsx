@@ -21,11 +21,20 @@ export interface Props {
   preserveSize?: boolean;
   allowHtml?: boolean;
   latex?: boolean;
-  style?: React.CSSProperties
+  style?: React.CSSProperties;
+  linkColor: string;
 }
 
 const MessageContent = memo(
-  ({ message, elements, preserveSize, allowHtml, latex, style }: Props) => {
+  ({
+    message,
+    elements,
+    preserveSize,
+    allowHtml,
+    latex,
+    style,
+    linkColor
+  }: Props) => {
     let lineCount = 0;
     let contentLength = 0;
 
@@ -52,6 +61,7 @@ const MessageContent = memo(
 
     const outputMarkdown = (
       <Markdown
+        linkColor={linkColor}
         allowHtml={allowHtml}
         latex={latex}
         refElements={outputRefElements}
@@ -86,6 +96,7 @@ ${output}`}
 
       inputMarkdown = (
         <Markdown
+          linkColor={linkColor}
           allowHtml={allowHtml}
           latex={latex}
           refElements={inputRefElements}
@@ -121,7 +132,7 @@ ${input}`}
     );
 
     return (
-      <Stack className="message-content" width="100%" sx={style}>
+      <Stack className={`message-content `} width="100%" sx={style}>
         {!!inputMarkdown || output ? messageContent : null}
         <InlinedElements elements={outputInlinedElements} />
       </Stack>
