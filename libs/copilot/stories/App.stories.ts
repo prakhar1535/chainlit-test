@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     widgetConfig: {
-      chainlitServer: 'http://livechat.galadon.com/live',
+      chainlitServer: 'https://livechat.galadon.com/live',
       theme: 'light',
       themeColor: 'lightBlue',
       fontColor: 'white',

@@ -153,7 +153,7 @@ export default function Widget({ config }: Props) {
   return (
     <>
       <PopOver
-        // chatHistory={chatHistory}
+        chatHistory={chatHistory}
         chatbot_name={chatbotName || 'Galadon'}
         status={status}
         branding={branding}
