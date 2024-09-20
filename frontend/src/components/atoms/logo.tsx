@@ -20,6 +20,7 @@ export const Logo = ({ style }: Props) => {
       src={JeemLogo}
       alt="logo"
       style={{
+        borderRadius: "1100000px",
         filter: 'contrast(5)',
         ...style
       }}

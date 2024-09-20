@@ -43,6 +43,7 @@ const MessageAvatar = ({ author }: Props) => {
           }
           sx={{
             borderRadius: '10000px',
+            
             width: '1.5rem',
             height: '1.5rem'
           }}

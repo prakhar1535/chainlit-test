@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     widgetConfig: {
-      chainlitServer: 'http://localhost:8000',
+      chainlitServer: 'https://galadon.sandbox.jeemstudio.com/chainlit',
       theme: 'light',
       popoverBackground: 'red'
     }
@@ -32,7 +32,7 @@ export const Primary: Story = {
 export const Secondary: Story = {
   args: {
     widgetConfig: {
-      chainlitServer: 'http://localhost:8000',
+      chainlitServer: 'https://galadon.sandbox.jeemstudio.com/chainlit',
       theme: 'dark',
       fontFamily: '"Nunito Sans"',
 

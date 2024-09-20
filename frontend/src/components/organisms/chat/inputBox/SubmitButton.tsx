@@ -55,7 +55,8 @@ const SubmitButton = ({ disabled, onSubmit }: SubmitButtonProps) => {
             justifyContent: "center",
           }} disabled={disabled} color="inherit" onClick={onSubmit}>
             <Telegram  sx={{
-              color: "black"
+              color: "white",
+              marginLeft: "6px"
             }}/>
           </IconButton>
         </Tooltip>

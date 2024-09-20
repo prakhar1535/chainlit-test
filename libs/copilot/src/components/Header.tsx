@@ -23,7 +23,8 @@ const Header:React.FC<headerProps> = ({themeColor, avatarUrl}): JSX.Element => (
       <img
         src={avatarUrl !== "" ? avatarUrl : "https://res.cloudinary.com/dvv44upa0/image/upload/v1724088690/xvvolyzavi6vrxg96a0a.png"}
         style={{
-          maxHeight: '25px'
+          maxHeight: '25px',
+          borderRadius: "50%"
         }}
       />
       {/* <IconButton onClick={() => setExpanded(!expanded)}>

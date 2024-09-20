@@ -62,7 +62,8 @@ export default function UserMessage({
         sx={{
           '&:hover .edit-icon': {
             visibility: 'visible'
-          }
+          },
+          
         }}
       >
         {!isEditing && isEditable && (
@@ -83,7 +84,7 @@ export default function UserMessage({
             px: 2.5,
             position: 'relative',
             borderRadius: '1.5rem',
-            backgroundColor: 'background.paper',
+            backgroundColor: '#f1f1f1',
             width: isEditing ? '100%' : 'auto',
             maxWidth: isEditing ? '100%' : '70%',
             flexGrow: isEditing ? 1 : 0,

@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/react';
 import { MessageContext } from 'contexts/MessageContext';
-import { memo, useContext } from 'react';
+import { memo, useContext, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -12,9 +12,7 @@ import { MessageAvatar } from './components/Avatar';
 import { MessageActions } from './components/MessageActions';
 import { MessageButtons } from './components/MessageButtons';
 import { MessageContent } from './components/MessageContent';
-
 import { useLayoutMaxWidth } from 'hooks/useLayoutMaxWidth';
-
 import { type IAction, type IMessageElement, type IStep } from 'client-types/';
 
 import { Messages } from './Messages';
@@ -88,7 +86,16 @@ const Message = memo(
         />
       );
     }
+    useEffect(() => {
+      if(isUserMessage){
+        console.log(message, "user-message");
+        
+      }
+      if(!message.steps || message.steps.length === 0){
+        console.log(message, "bot-message");
 
+      }
+    }, [])
     return (
       <>
         <Box
@@ -135,7 +142,8 @@ const Message = memo(
                       allowHtml={allowHtml}
                       latex={latex}
                       style={{
-                        color: fontColor !== "" ? fontColor : "unset"
+                        color: "black",
+                        
                       }}
                     />
                   </UserMessage>
@@ -144,7 +152,7 @@ const Message = memo(
                 <Stack
                   direction="row"
                   gap="1rem"
-                  width="fit-content"
+                  width="80%"
                   className="ai-message"
                 >
                   {!isStep || !indent ? (

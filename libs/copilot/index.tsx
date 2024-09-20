@@ -1,6 +1,6 @@
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
 // @ts-expect-error inlined
@@ -24,6 +24,7 @@ declare global {
     mountChainlitWidget: (config: IWidgetConfig) => void;
     unmountChainlitWidget: () => void;
     sendChainlitMessage: (message: IStep) => void;
+    cl_chatbotId: string;  // Add this line
   }
 }
 
@@ -44,12 +45,13 @@ window.mountChainlitWidget = (config: IWidgetConfig) => {
   });
 
   window.cl_shadowRootElement = shadowRootElement;
+  window.cl_chatbotId = config.chatBotID || "";  
+  // Send chatbotId to backend
 
   root = ReactDOM.createRoot(shadowRootElement);
   root.render(
     <React.StrictMode>
       <CacheProvider value={cache}>
-        hi
         <style type="text/css">
           {clStyles}
           {hljsStyles}
@@ -65,6 +67,13 @@ window.unmountChainlitWidget = () => {
   root?.unmount();
 };
 
-window.sendChainlitMessage = () => {
-  console.info('Copilot is not active. Please check if the widget is mounted.');
+window.sendChainlitMessage = (message: IStep) => {
+  // Include chatbotId in the message
+  const messageWithChatbotId = {
+    ...message,
+    chatbotId: window.cl_chatbotId,
+  };
+  
+  // Here you would typically send this message to your backend
+  console.info('Sending message with chatbotId:', messageWithChatbotId);
 };

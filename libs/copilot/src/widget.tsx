@@ -1,5 +1,5 @@
 import PopOver from 'popover';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IWidgetConfig } from 'types';
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -38,7 +38,25 @@ export default function Widget({ config }: Props) {
   };
 
   const isPopoverOpen = Boolean(anchorEl);
-
+  const sendChatbotID = async (chatBotID: string) => {
+    try {
+      const response = await fetch('http://0.0.0.0:8066/chatbot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ chatbot_id: chatBotID }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to send chatbot ID');
+      }
+  
+      const data = await response.json();
+      console.log('Response:', data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   return (
     <>
       <PopOver

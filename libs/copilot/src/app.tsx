@@ -98,7 +98,7 @@ export default function App({ widgetConfig }: Props) {
   if (!config || !theme) {
     return null;
   }
-
+  
   return (
     <ThemeProvider theme={theme}>
       <Toaster
